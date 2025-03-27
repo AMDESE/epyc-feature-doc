@@ -1,6 +1,8 @@
-TLDR
-----
-To use amd-pstate driver:
+# amd-pstate CPU Frequency Scaling Driver
+
+
+## Enabling amd-pstate driver
+
 1. Enable CPPC from BIOS options.
 2. Enable X86_AMD_PSTATE in kernel config.
 3. Add “amd_pstate=active(/passive/guided)” in kernel commandline.
@@ -8,8 +10,8 @@ To use amd-pstate driver:
 	* It should show "amd-pstate" (if "amd_pstate=passive"/guided was passed in cmdline)
 	  or "amd-pstate-epp" (if "amd_pstate=active" was passed in cmdline)
 
-Introduction
-------------
+## Introduction
+
 The ACPI Collaborative Processor Performance Control (CPPC) Specification allows the platform to
 expose performance capabilities to the OS on an abstract scale of 0-255. These abstract values are
 mapped to the available CPU frequency range by the platform firmware. This allows more fine-grained
@@ -20,8 +22,8 @@ The amd-pstate CPU frequency scaling driver implements the ACPI CPPC Specificati
 With amd-pstate, the OS can request for perf levels in the turbo boost range (if enabled), whereas
 acpi-cpufreq only allows the OS to set frequency upto P0 (nominal frequency).
 
-Design Description
-------------------
+## Design Description
+
 As per the CPPC specification, the OS is expected to describe its performance requirements by
 requesting for a suitable minimum performance level (lower limit), maximum performance level (upper
 limit), desired performance level (this value is zero in the autonomous mode) and Energy Performance
@@ -91,8 +93,8 @@ Accordingly, amd-pstate has three operating modes: active, passive and guided.
 	   is allowed by the OS governor (like the passive mode). This mode is added to emulate the
 	   behaviour of the schedutil governor with the acpi-cpufreq driver.
 
-Guidance on which mode to use
------------------------------
+## Guidance on which mode to use
+
 1. Active mode:
    * Performance governor should be considered equivalent to acpi-cpufreq with performance governor
      in terms of performance and provides better energy efficiency at lower CPU utilizations.
@@ -108,8 +110,7 @@ Guidance on which mode to use
    * Allows to specify a lower CPU frequency limit, providing the platform firmware the freedom
      to choose any frequency above this value.
 
-Summary of operating modes
---------------------------
+## Summary of operating modes
 
 ```
 +-----------------+-----------------------------+----------------------+----------------------+
@@ -123,8 +124,8 @@ Summary of operating modes
 +-----------------+-----------------------------+----------------------+----------------------+
 ```
 
-CPPC support across AMD processor generations
----------------------------------------------
+## CPPC support across AMD processor generations
+
 Two types of communications are supported between platform firmware and the OS: shared memory and
 MSR-based. Older systems used shared memory, whereas Zen4 onwards use MSRs.
 
@@ -142,8 +143,7 @@ MSR-based. Older systems used shared memory, whereas Zen4 onwards use MSRs.
 +-------------------+--------------------------+
 ```
 
-AMD Pstate in the Linux kernel
-------------------------------
+## AMD Pstate in the Linux kernel
 
 ```
 +---------------+     +-------------------+     +-------------+     +-------------+     +--------------+
@@ -156,8 +156,8 @@ AMD Pstate in the Linux kernel
 +---------------+     +-------------------+     +-------------+     +-------------+     +--------------+
 ```
 
-Prerequisites
--------------
+## Prerequisites
+
 1. BIOS config options:
 	* On the AMD AGESA BIOS, Enable NBIO Common Options --> SMU Common Options --> CPPC
 	* BIOS version should be recent enough to support CPPC v3
@@ -169,8 +169,8 @@ Prerequisites
 	* Pass amd_pstate=active/passive/guided in kernel cmdline to boot with amd-pstate driver
 	* If amd_pstate=disable is passed, acpi-cpufreq will be loaded, if enabled through config options
 
-User interface
---------------
+## User interface
+
 1. Checking current CPUFreq driver:
 	* /sys/devices/system/cpu/cpu<x>/cpufreq/scaling_driver “amd-pstate-epp” for the active mode, and
 	  “amd-pstate” for the passive and guided modes.
@@ -194,8 +194,8 @@ User interface
 7. Setting desired frequency (only available with userspace governor):
 	* /sys/devices/system/cpu/cpu<x>/cpufreq/scaling_setspeed
 
-FAQs
-----
+## FAQs
+
 1. What are the BIOS Feature pre-requisite to enable CPPC?
 -> The BIOS feature titled "CPPC" needs to be enabled. On the AMD AGESA BIOS this is via
    NBIO Common Options --> SMU Common Options --> CPPC
@@ -238,8 +238,8 @@ FAQs
    towards providing the highest performance. If the EPP value is power, then the Platform Firmware
    frequency-scaling will be biased towards providing the best power savings.
 
-How to test
------------
+## How to test
+
 1. Enable amd-pstate selftest as mentioned below
    * Enable config X86_AMD_PSTATE_UT to build the selftest for amd-pstate.  It will test basic
      sanity of amd-pstate driver. The results of the unit test will appear in the linux kernel
