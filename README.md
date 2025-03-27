@@ -54,3 +54,21 @@ around the feature.
 This is a rough guidance for the content of feature documentation. The
 actual formatting is left to the author's discretion.
 
+
+# Building the Feature Documentation
+
+Building the documentation requires the following packages
+
+```
+doxygen graphviz texlive-latex-base texlive-fonts-recommended texlive-extra-utils texlive-latex-extra
+```
+
+To build the document, please run:
+
+```
+make clean
+make docs
+```
+
+This will generate "epyc_linux_feature_doc.pdf" in the root directory.
+
