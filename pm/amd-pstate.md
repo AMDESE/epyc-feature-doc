@@ -217,42 +217,49 @@ MSR-based. Older systems used shared memory, whereas Zen4 onwards use MSRs.
 
 ## FAQs
 
-1. What are the BIOS Feature pre-requisite to enable CPPC?
--> The BIOS feature titled "CPPC" needs to be enabled. On the AMD AGESA BIOS this is via
+1. **What are the BIOS Feature pre-requisite to enable CPPC?**
+
+   The BIOS feature titled "CPPC" needs to be enabled. On the AMD AGESA BIOS this is via
    NBIO Common Options --> SMU Common Options --> CPPC
 
-2. Where to get latest AMD CPPC OS drivers for Zen4 CPU?
--> The latest version of the driver is available in the upstream linux kernel. The files are
+2. **Where to get latest AMD CPPC OS drivers for Zen4 CPU?**
+
+   The latest version of the driver is available in the upstream linux kernel. The files are
    drivers/cpufreq/amd-pstate.c and drivers/cpufreq/amd-pstate.h
 
-3. Are there other steps/commands needed in OS to enable CPPC and be able to control P-State?
--> Yes, one of the following kernel commandline options needs to be passed: "amd_pstate=active"
+3. **Are there other steps/commands needed in OS to enable CPPC and be able to control P-State?**
+
+   Yes, one of the following kernel commandline options needs to be passed: "amd_pstate=active"
    or "amd_pstate=passive" or "amd_pstate=guided"
    This will boot the kernel with the amd_pstate driver which implements the ACPI CPPC Spec. The
    mode will be one of "active", "passive" or "guided" respectively. These modes are documented
    in the amd-pstate kernel documentation.
    https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/pm/amd-pstate.rst#amd-pstate-driver-operation-modes
 
-4. How to verify P-State is indeed changed through CPPC?
--> CPUFreq driver: /sys/devices/system/cpu/cpu<x>/cpufreq/scaling_driver. This shows the current
+4. **How to verify P-State is indeed changed through CPPC?**
+
+   CPUFreq driver: /sys/devices/system/cpu/cpu<x>/cpufreq/scaling_driver. This shows the current
    cpufreq driver being used, it returns “amd-pstate-epp” for the active mode, and “amd-pstate”
    for the passive and guided modes. If this driver is loaded, then the P-State change occurs
    through CPPC.
 
-5. I want the best possible performance for my workload irrespective of the energy consumed. Which
-   amd-pstate mode should I use?
--> You should use “amd_pstate=active” with performance governor with boost enabled, this will
+5. **I want the best possible performance for my workload irrespective of the energy consumed. Which
+   amd-pstate mode should I use?**
+
+   You should use “amd_pstate=active” with performance governor with boost enabled, this will
    allow the CPU cores to run at the maximum possible frequency subject to thermal and power
    constraints.
 
-6. I want to save maximum possible energy when the utilization of the system is low. Which
-   amd-pstate mode should I use?
--> You should use “amd_pstate=active” with powersave governor and “power” EPP hint.
+6. **I want to save maximum possible energy when the utilization of the system is low. Which
+   amd-pstate mode should I use?**
 
-7. The behaviour of the powersave governor with amd-pstate driver passive mode is the same as the
+   You should use “amd_pstate=active” with powersave governor and “power” EPP hint.
+
+7. **The behaviour of the powersave governor with amd-pstate driver passive mode is the same as the
    acpi-cpufreq driver. However, the behaviour of powersave governor with amd-pstate active mode
-   is different. Why is that?
--> The powersave governor with amd-pstate passive mode or acpi-cpufreq always requests the lowest
+   is different. Why is that?**
+
+   The powersave governor with amd-pstate passive mode or acpi-cpufreq always requests the lowest
    performance level which corresponds to the lowest frequency. The behaviour of the powersave
    governor with active mode is governed by the Energy Performance Preference (EPP) value. If the
    EPP value is performance then the Platform Firmware frequency-scaling strategy will be biased
@@ -265,3 +272,4 @@ MSR-based. Older systems used shared memory, whereas Zen4 onwards use MSRs.
    * Enable config X86_AMD_PSTATE_UT to build the selftest for amd-pstate.  It will test basic
      sanity of amd-pstate driver. The results of the unit test will appear in the linux kernel
      logs (`dmesg`).
+
