@@ -31,67 +31,88 @@ Preference, abbreviated as EPP – a value that indicates a bias towards perform
 
 Accordingly, amd-pstate has three operating modes: active, passive and guided.
 
-1. In active mode the OS sets the minimum and maximum performance limits, and the EPP. The desired
+<ol>
+<li>
+   In active mode the OS sets the minimum and maximum performance limits, and the EPP. The desired
    performance level is autonomously determined by the platform firmware based on the various
    parameters such as the CPU utilization, the available power and the thermal budgets of the system
    among others.
-	*  EPP hints allow the OS to indicate whether it wants a bias towards energy efficiency
+<ul>
+<li>
+	   EPP hints allow the OS to indicate whether it wants a bias towards energy efficiency
 	   or performance. Four EPP hints available by the amd-pstate driver in the Linux Kernel.
 	   They are performance (EPP=0), balance_performance (EPP=128), balance_power (EPP=191), and
 	   power (EPP=255). Only two governors supported - performance and powersave.  With the
 	   performance governor, the EPP hint is by default set to performance and cannot be changed.
 	   All four EPP hints can be set only with powersave governor.
-2. In passive mode, the OS is also responsible for communicating the desired
+</li>
+</ul>
+<li>
+   In passive mode, the OS is also responsible for communicating the desired
    performance level to the platform firmware (desired performance level is decided by the CPUFreq
    governor).
-	*  All governors are supported. This is akin to the acpi-cpufreq driver with a greater set
+<ul>
+<li>
+	   All governors are supported. This is akin to the acpi-cpufreq driver with a greater set
 	   of frequencies available to the Linux CPUFreq governors.  With the amd-pstate passive
 	   mode, the platform firmware will only provide the exact frequency requested by the OS.
+<br/>
 
 ```
-   +-------------------------------------------+-------------------------------------------+
-   |		acpi-cpufreq		       |  	     amd-pstate-passive 	   |
-   +-------------------------------------------+-------------------------------------------+
-   |    Governor Request  Resultant Frequency  |  Governor Request   Resultant Frequency   |
-   |					       |  					   |
-   |     [P0 , P1)    --->	[P0, FMax]     |    [0 MHz, FMax] ---> [Lowest, Highest]   |
-   |     [P1 , P2)    --->	   P1 	       |  * Resultant frequency will be close to   |
-   |     [P2 , 0 ]    --->	   P2	       |    the governor request subject to power/ |
-   |					       |    thermal limits			   |
-   +-------------------------------------------+-------------------------------------------+
-   |  Frequency space as seen by acpi-cpufreq  |  Frequency space as seen by amd-pstate    |
-   |	                                       |        Continuous performance scale 	   |
-   |  Discrete frequency levels (P0, P1, P2)   |      (Lowest Perf - Highest Perf (255)    |
-   |	  +------------------------+           |        +--------------------------+	   |
-   |	  |      FMax (Boost)      |           |        | Highest Perf (255/Turbo) |	   |
-   |	  |   (not requestable)    |           |        +------------^-------------+	   |
-   |	  +-----------^------------+           |                     |			   |
-   |	              |                        |        +------------+-------------+	   |
-   |	  +-----------+------------+           |        |       Nominal Perf       |  	   |
-   |	  |    P0 (max request)    |           |        +------------^-------------+	   |
-   |	  +-----------^------------+           |                     |			   |
-   |	              |                        |        +------------+-------------+	   |
-   |	  +-----------+------------+           |        |   Lowest Nonlinear Perf  |	   |
-   |	  |          P1            |           |        +------------^-------------+	   |
-   |	  +-----------^------------+           |                     |			   |
-   |	              |                        |        +------------+-------------+	   |
-   |	  +-----------+------------+           |        |       Lowest Perf        |	   |
-   |	  |          P2            |           |        +--------------------------+	   |
-   |	  +------------------------+           |                   			   |
-   |	                                       |					   |
-   +-------------------------------------------+-------------------------------------------+
+
+    +-------------------------------------------+-------------------------------------------+
+    |               acpi-cpufreq                |             amd-pstate-passive            |
+    +-------------------------------------------+-------------------------------------------+
+    |    Governor Request  Resultant Frequency  |  Governor Request   Resultant Frequency   |
+    |                                           |                                           |
+    |     [P0 , P1)    --->      [P0, FMax]     |    [0 MHz, FMax] ---> [Lowest, Highest]   |
+    |     [P1 , P2)    --->         P1          |  * Resultant frequency will be close to   |
+    |     [P2 , 0 ]    --->         P2          |    the governor request subject to power/ |
+    |                                           |    thermal limits                         |
+    +-------------------------------------------+-------------------------------------------+
+    |  Frequency space as seen by acpi-cpufreq  |  Frequency space as seen by amd-pstate    |
+    |                                           |        Continuous performance scale       |
+    |  Discrete frequency levels (P0, P1, P2)   |      (Lowest Perf - Highest Perf (255)    |
+    |      +------------------------+           |        +--------------------------+       |
+    |      |      FMax (Boost)      |           |        | Highest Perf (255/Turbo) |       |
+    |      |   (not requestable)    |           |        +------------^-------------+       |
+    |      +-----------^------------+           |                     |                     |
+    |                  |                        |        +------------+-------------+       |
+    |      +-----------+------------+           |        |       Nominal Perf       |       |
+    |      |    P0 (max request)    |           |        +------------^-------------+       |
+    |      +-----------^------------+           |                     |                     |
+    |                  |                        |        +------------+-------------+       |
+    |      +-----------+------------+           |        |   Lowest Nonlinear Perf  |       |
+    |      |          P1            |           |        +------------^-------------+       |
+    |      +-----------^------------+           |                     |                     |
+    |                  |                        |        +------------+-------------+       |
+    |      +-----------+------------+           |        |       Lowest Perf        |       |
+    |      |          P2            |           |        +--------------------------+       |
+    |      +------------------------+           |                                           |
+    |                                           |                                           |
+    +-------------------------------------------+-------------------------------------------+
+
 ```
-
-   Crucial difference is that with acpi-cpufreq, if the governor selects the P0 P-State, with boost
-   enabled, the platform firmware can automatically boost the frequency to a higher value, whereas with
-   amd-pstate=passive, the final frequency will be as close as possible to the requested frequency.
-
-3. In guided mode, the OS will set the minimum performance level to the value decided by the
+<br/>
+	   Crucial difference is that with acpi-cpufreq, if the governor selects the P0 P-State, with boost
+	   enabled, the platform firmware can automatically boost the frequency to a higher value, whereas with
+	   amd-pstate=passive, the final frequency will be as close as possible to the requested frequency.
+</li>
+</ul>
+</li>
+<li>
+   In guided mode, the OS will set the minimum performance level to the value decided by the
    CPUFreq governor. This is the lower threshold for the platform firmware, which autonomously
    selects the runtime performance level.
-	*  All governors are supported. It is autonomous (like the active mode) to the extent that
+<ul>
+<li>
+	   All governors are supported. It is autonomous (like the active mode) to the extent that
 	   is allowed by the OS governor (like the passive mode). This mode is added to emulate the
 	   behaviour of the schedutil governor with the acpi-cpufreq driver.
+</li>
+</ul>
+</li>
+</ol>
 
 ## Guidance on which mode to use
 
@@ -114,10 +135,10 @@ Accordingly, amd-pstate has three operating modes: active, passive and guided.
 
 ```
 +-----------------+-----------------------------+----------------------+----------------------+
-|                 | Active mode          	| Passive mode         | Guided mode          |
+|                 | Active mode                 | Passive mode         | Guided mode          |
 +-----------------+-----------------------------+----------------------+----------------------+
-| OS controls     | Min, Max limits, EPP hint 	| Min, Max limits,     | Min, Max limits      |
-|		  |			 	| Desired frequency    | Desired Frequency    |
+| OS controls     | Min, Max limits, EPP hint   | Min, Max limits,     | Min, Max limits      |
+|                 |                             | Desired frequency    | Desired Frequency    |
 +-----------------+-----------------------------+----------------------+----------------------+
 | Platform        | Decide which frequency      | Provide frequency    | Provide frequency    |
 | controls        | to be set within OS limits  | closest to OS request| >= OS request        |
