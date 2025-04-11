@@ -46,6 +46,7 @@ Accordingly, amd-pstate has three operating modes: active, passive and guided.
 	   of frequencies available to the Linux CPUFreq governors.  With the amd-pstate passive
 	   mode, the platform firmware will only provide the exact frequency requested by the OS.
 
+```
    +-------------------------------------------+-------------------------------------------+
    |		acpi-cpufreq		       |  	     amd-pstate-passive 	   |
    +-------------------------------------------+-------------------------------------------+
@@ -77,6 +78,7 @@ Accordingly, amd-pstate has three operating modes: active, passive and guided.
    |	  +------------------------+           |                   			   |
    |	                                       |					   |
    +-------------------------------------------+-------------------------------------------+
+```
 
    Crucial difference is that with acpi-cpufreq, if the governor selects the P0 P-State, with boost
    enabled, the platform firmware can automatically boost the frequency to a higher value, whereas with
@@ -108,6 +110,8 @@ Guidance on which mode to use
 
 Summary of operating modes
 --------------------------
+
+```
 +-----------------+-----------------------------+----------------------+----------------------+
 |                 | Active mode          	| Passive mode         | Guided mode          |
 +-----------------+-----------------------------+----------------------+----------------------+
@@ -117,12 +121,14 @@ Summary of operating modes
 | Platform        | Decide which frequency      | Provide frequency    | Provide frequency    |
 | controls        | to be set within OS limits  | closest to OS request| >= OS request        |
 +-----------------+-----------------------------+----------------------+----------------------+
+```
 
 CPPC support across AMD processor generations
 ---------------------------------------------
 Two types of communications are supported between platform firmware and the OS: shared memory and
 MSR-based. Older systems used shared memory, whereas Zen4 onwards use MSRs.
 
+```
 +-------------------+--------------------------+
 | Processor Family  | CPPC Support             |
 +-------------------+--------------------------+
@@ -134,10 +140,12 @@ MSR-based. Older systems used shared memory, whereas Zen4 onwards use MSRs.
 +-------------------+--------------------------+
 | Zen4+             | MSR                      |
 +-------------------+--------------------------+
+```
 
 AMD Pstate in the Linux kernel
 ------------------------------
 
+```
 +---------------+     +-------------------+     +-------------+     +-------------+     +--------------+
 |      5.16     |     |        6.1        |     |     6.2     |     |     6.3     |     |     6.13     |
 +---------------+     +-------------------+     +-------------+     +-------------+     +--------------+
@@ -146,6 +154,7 @@ AMD Pstate in the Linux kernel
 |added          |     |added, driver      |     |             |     |             |     |for Zen 5     |
 |               |     |disabled by default|     |             |     |             |     |and above     |
 +---------------+     +-------------------+     +-------------+     +-------------+     +--------------+
+```
 
 Prerequisites
 -------------
