@@ -182,8 +182,8 @@ MSR-based. Older systems used shared memory, whereas Zen4 onwards use MSRs.
 1. BIOS config options:
 	* On the AMD AGESA BIOS, Enable NBIO Common Options --> SMU Common Options --> CPPC
 	* BIOS version should be recent enough to support CPPC v3
-	* CPPC is defined in section 8.4.6 of the ACPI spec v6.5
-	  https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf
+	* CPPC is defined in section 8.4.6 of the ACPI spec v6.5  
+      https://uefi.org/sites/default/files/resources/ACPI_Spec_6_5_Aug29.pdf
 2. Kernel config:
 	* Enable X86_AMD_PSTATE config
 3. Kernel command line parameter:
@@ -210,7 +210,7 @@ MSR-based. Older systems used shared memory, whereas Zen4 onwards use MSRs.
 	* energy_performance_available_preferences file in the same directory gives the supported EPP hints.
 6. Toggling the boost:
 	* /sys/devices/system/cpu/cpufreq/boost
-	* Post linux kernel 6.11, boost can be toggled at a per-CPU level as well through
+	* Post linux kernel 6.11, boost can be toggled at a per-CPU level as well through:  
 	  /sys/devices/system/cpu/cpu<x>/cpufreq/boost
 7. Setting desired frequency (only available with userspace governor):
 	* /sys/devices/system/cpu/cpu<x>/cpufreq/scaling_setspeed
