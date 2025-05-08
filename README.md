@@ -1,12 +1,12 @@
 # Introduction
 
 AMD EPYC Linux Feature Documentation project includes information on
-various EPYC IP and their enablement in Linux environment. This
-documentation serves as a guidance to EPYC users to detect these
-features and test their enablement in Linux environment.
+various EPYC feature and their enablement in Linux environment. This
+documentation serves as a guidance to EPYC users to detect and test
+the EPYC feature enablement in Linux environment.
 
 
-# IP Feature List
+# EPYC Feature List
 
 The AMD EPYC Linux Feature Documentation repository is divided into
 following technology domains:
@@ -24,12 +24,12 @@ following technology domains:
 
 These domains will include guide for feature detection, the state of
 feature enablement, best practices, and optionally steps to test
-the IP for functional correctness.
+the Feature for functional correctness.
 
 
 ## Format
 
-The IP.md files contain the following details:
+The <EPYC-Feature>.md files contain the following details:
 
 1. **Introduction**: A brief introduction of the feature
 2. **Significance**: Describes the need for the feature and its
